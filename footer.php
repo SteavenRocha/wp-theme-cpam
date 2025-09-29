@@ -7,7 +7,7 @@
                 <?php
                 $logo_footer = get_field('logo', 'informacion-general');
                 if ($logo_footer):
-                    echo wp_get_attachment_image($logo_footer, 'medium', false, array('class' => 'logo-footer'));
+                    echo wp_get_attachment_image($logo_footer, 'full', false, array('class' => 'logo-footer'));
                 endif;
                 ?>
             </div>

@@ -31,6 +31,15 @@ function cpam_scripts_styles()
 
 add_action('wp_enqueue_scripts', 'cpam_scripts_styles');
 
+/* SWIPER */
+function enqueue_swiper_assets()
+{
+    wp_enqueue_style('swiper-css', get_template_directory_uri() . '/assets/css/swiper-bundle.min.css');
+    wp_enqueue_script('swiper-js', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js', [], null, true);
+}
+
+add_action('wp_enqueue_scripts', 'enqueue_swiper_assets');
+
 // PAGINACIÓN ESPECIALIDADES
 function cargar_especialidades_ajax()
 {
@@ -63,7 +72,7 @@ function cargar_especialidades_ajax()
                             ' . $image_html . '
                             <div class="bg-contenido">
                                 <h3>' . get_the_title() . '</h3>
-                                <p>' . get_field('descripcion') . '</p>
+                                ' . get_field('descripcion') .  '
                             </div>
                         </div>
                     </li>';

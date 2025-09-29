@@ -23,11 +23,7 @@ if ($query->have_posts()) {
 ?>
 
 <main class="contenedor seccion">
-
-    <!-- Consulta aqui los datos de mi pagina especialidades -->
-    <!-- <?php get_template_part('template-parts/hero'); ?> -->
-
-    <section class="hero bg-p-crema">
+    <section class="hero bg-crema">
         <div class="left text-primary">
             <div>
                 <?php if (get_field('titulo')) { ?>
@@ -64,7 +60,7 @@ if ($query->have_posts()) {
             <?php
             $imagen = get_field('imagen');
             if ($imagen) { ?>
-                <?php echo wp_get_attachment_image($imagen, 'full', false, array('class' => 'imagen-hero')); ?>
+                <?php echo wp_get_attachment_image($imagen, 'full', false, array('class' => 'imagen-slider')); ?>
             <?php } ?>
         </div>
     </section>
@@ -101,8 +97,6 @@ if ($query->have_posts()) {
     </section>
     <!-- Fin Listado de Especialidades -->
 </main>
-
-<?php get_footer(); ?>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -185,3 +179,5 @@ if ($query->have_posts()) {
         cargarEspecialidades();
     });
 </script>
+
+<?php get_footer(); ?>
