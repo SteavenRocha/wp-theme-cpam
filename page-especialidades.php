@@ -60,7 +60,7 @@ if ($query->have_posts()) {
             <?php
             $imagen = get_field('imagen');
             if ($imagen) { ?>
-                <?php echo wp_get_attachment_image($imagen, 'full', false, array('class' => 'imagen-slider')); ?>
+                <?php echo wp_get_attachment_image($imagen, 'full', false, array('class' => 'imagen-hero')); ?>
             <?php } ?>
         </div>
     </section>

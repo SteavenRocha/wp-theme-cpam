@@ -49,8 +49,8 @@ html {
 body {
   margin: 0;
   font-family: var(--fuente-principal);
-  font-size: 17px;
-  font-size: 1.7rem;
+  font-size: 18px;
+  font-size: 1.8rem;
   line-height: 1.5;
 }
 
@@ -150,6 +150,10 @@ button {
 
 .seccion-pg {
   padding: 8rem 0;
+}
+
+.seccion-pg-t {
+  padding-top: 8rem;
 }
 
 .pb-0 {
@@ -279,7 +283,7 @@ button {
 .menu-principal a {
   display: block;
   color: var(--blanco);
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   transition: color .3s ease;
 }
 
@@ -569,7 +573,7 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:checked::after {
   content: "✔";
-  font-size: 17px;
+  font-size: 18px;
   color: var(--primario-azul);
 }
 
@@ -587,6 +591,40 @@ input[type="checkbox"]:focus {
 
 .formulario {
   width: 50%;
+}
+
+/* Pagina Nosotros */
+/* Hero */
+.nosotros .imagen-hero {
+  width: 100%;
+  object-fit: cover;
+  height: 550px;
+  border-radius: 50px;
+}
+
+.nosotros .cantainer {
+  display: flex;
+  gap: 80px;
+  align-items: center;
+}
+
+.nosotros .cantainer .contenido {
+  width: 50%;
+}
+
+.nosotros .cantainer .side-img {
+  width: 50%;
+  border-radius: 50px;
+}
+
+.nosotros .cantainer.mision {
+  flex-direction: row-reverse;
+}
+
+.nosotros .frase {
+  font-size: 3rem;
+  font-weight: 400;
+  text-align: center;
 }
 
 /* Hero */
@@ -615,7 +653,8 @@ input[type="checkbox"]:focus {
 .hero .right {
   position: relative;
   width: 50%;
-  clip-path: polygon(0% 100%, 45% 6%, 55% 6%, 100% 80%, 100% 100%, 0% 100%);
+  clip-path: polygon(calc(50% - 58.209px) calc(50% - 207.4828px), calc(50% - 58.209px) calc(50% - 207.4828px), calc(50% - 48.044984px) calc(50% - 216.12899164px), calc(50% - 36.925912px) calc(50% - 222.85380832px), calc(50% - 25.090548px) calc(50% - 227.65724968px), calc(50% - 12.777656px) calc(50% - 230.53931536px), calc(50% - 0.22599999999994px) calc(50% - 231.500005px), calc(50% - -12.325656px) calc(50% - 230.53931824px), calc(50% - -24.638548px) calc(50% - 227.65725472px), calc(50% - -36.473912px) calc(50% - 222.85381408px), calc(50% - -47.592984px) calc(50% - 216.12899596px), calc(50% - -57.757px) calc(50% - 207.4828px), calc(100% - 0.25800000000004px) calc(100% - -0.0029999999999859px), 0.194336px calc(100% - -0.0029999999999859px), 0px calc(100% - 0.19200000000001px), calc(50% - 58.209px) calc(50% - 207.4828px));
+  /* clip-path: polygon(0% 100%, 45% 6%, 55% 6%, 100% 80%, 100% 100%, 0% 100%);  */
 }
 
 .hero .right img {
@@ -638,7 +677,7 @@ textarea {
   border: 1px solid var(--primario-azul);
   border-radius: 16px;
   padding: 16px;
-  font-size: 17px;
+  font-size: 18px;
   transition: box-shadow .3s ease;
   color: var(--primario-azul);
   width: 100%;
