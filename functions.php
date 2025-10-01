@@ -124,15 +124,16 @@ function cargar_doctores_ajax()
             // Especialidades (relación con CPT)
             $especialidades_html = '';
             $especialidades = get_field('especialidad');
+
             if ($especialidades) {
                 if (is_array($especialidades)) {
-                    $nombres = [];
+                    $spans = [];
                     foreach ($especialidades as $esp_id) {
-                        $nombres[] = get_the_title($esp_id);
+                        $spans[] = '<span class="pill">' . esc_html(get_the_title($esp_id)) . '</span>';
                     }
-                    $especialidades_html = implode(' ', $nombres);
+                    $especialidades_html = implode(' ', $spans);
                 } else {
-                    $especialidades_html = get_the_title($especialidades);
+                    $especialidades_html = '<span class="pill">' . esc_html(get_the_title($especialidades)) . '</span>';
                 }
             }
 
@@ -160,14 +161,16 @@ function cargar_doctores_ajax()
                             ' . $image_html . '
                             <div class="bg-contenido">
 
-                                <span>' . $especialidades_html . '</span>
+                                <div class="pill-contenedor">
+                                    ' . $especialidades_html . '
+                                </div>
 
-                                <div>
-                                    <h3>' . get_the_title() . '</h3>
+                                <div class="cuerpo">
+                                    <h4>' . get_the_title() . '</h4>
                                     ' . $docs_html . '
                                 </div>
 
-                                <span>' . $titulo_boton . '</span>
+                                <span class="titulo-btn">' . $titulo_boton . '</span>
                             </div>
                         </div>
                     </li>';
