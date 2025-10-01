@@ -90,3 +90,98 @@ function cargar_especialidades_ajax()
 // Para usuarios logueados y no logueados
 add_action('wp_ajax_nopriv_cargar_especialidades', 'cargar_especialidades_ajax');
 add_action('wp_ajax_cargar_especialidades', 'cargar_especialidades_ajax');
+
+// PAGINACIÓN DOCTORES
+function cargar_doctores_ajax()
+{
+    $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+
+    $args = array(
+        'post_type'      => 'staff_medico',
+        'post_status'    => 'publish',
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+        'posts_per_page' => 8,
+        'paged'          => $paged
+    );
+
+    $query = new WP_Query($args);
+
+    $html = '';
+
+    if ($query->have_posts()) :
+        while ($query->have_posts()) : $query->the_post();
+
+            $image_html = '';
+            $image_id   = get_field('imagen');
+            if ($image_id) {
+                $image_html = wp_get_attachment_image($image_id, 'full', false, ['class' => 'imagen']);
+            }
+
+            $staff_page = get_page_by_path('staff-medico');
+            $titulo_boton = $staff_page ? get_field('titulo_boton', $staff_page->ID) : '';
+
+            // Especialidades (relación con CPT)
+            $especialidades_html = '';
+            $especialidades = get_field('especialidad');
+            if ($especialidades) {
+                if (is_array($especialidades)) {
+                    $nombres = [];
+                    foreach ($especialidades as $esp_id) {
+                        $nombres[] = get_the_title($esp_id);
+                    }
+                    $especialidades_html = implode(' ', $nombres);
+                } else {
+                    $especialidades_html = get_the_title($especialidades);
+                }
+            }
+
+            // Documentos de los doctores
+            $docs_html = '';
+            if (have_rows('documentos')) {
+                $docs = [];
+
+                while (have_rows('documentos')) : the_row();
+                    $nombre = get_sub_field('nombre_documento');
+                    $numero = get_sub_field('n_documento');
+
+                    if ($nombre && $numero) {
+                        $docs[] = '<strong>' . esc_html($nombre) . ':</strong> ' . esc_html($numero);
+                    }
+                endwhile;
+
+                if (!empty($docs)) {
+                    $docs_html .= '<p class="documentos">' . implode(' / ', $docs) . '</p>';
+                }
+            }
+
+            $html .= '<li class="card doctores">
+                        <div class="contenido text-white">
+                            ' . $image_html . '
+                            <div class="bg-contenido">
+
+                                <span>' . $especialidades_html . '</span>
+
+                                <div>
+                                    <h3>' . get_the_title() . '</h3>
+                                    ' . $docs_html . '
+                                </div>
+
+                                <span>' . $titulo_boton . '</span>
+                            </div>
+                        </div>
+                    </li>';
+        endwhile;
+    endif;
+
+    wp_reset_postdata();
+
+    wp_send_json([
+        'html'     => $html,
+        'maxPages' => $query->max_num_pages
+    ]);
+}
+
+// Para usuarios logueados y no logueados
+add_action('wp_ajax_nopriv_cargar_doctores', 'cargar_doctores_ajax');
+add_action('wp_ajax_cargar_doctores', 'cargar_doctores_ajax');

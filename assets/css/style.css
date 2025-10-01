@@ -721,7 +721,8 @@ input:focus {
 }
 
 /* Cards */
-.sin-especialidades {
+.sin-especialidades,
+.sin-doctores {
   display: none;
   font-size: 20px;
   color: #555;
@@ -833,4 +834,28 @@ button:disabled {
 .servicios .card h3 {
   padding: 40px 20px;
   text-align: center;
+}
+
+/* Cards Doctores */
+.card.doctores {
+
+}
+
+.card.doctores .contenido {
+  flex-direction: column;
+  height: 100%;
+}
+
+.doctores .listado-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.card.doctores .imagen {
+  width: 100%;
+  height: 270px;
+}
+
+.card.doctores .bg-contenido {
+  width: 100%;
+  flex: 1;
 }
