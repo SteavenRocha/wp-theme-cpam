@@ -150,7 +150,7 @@
         <?php endif; ?>
     </section>
 
-    <section class="bg-crema seccion-mg seccion-pg mb-0">
+    <section class="bg-crema seccion-mg seccion-pg mb-0" id="contactanos">
         <div class="contenedor text-primary center">
             <h2 class="text-font-headings mg-b-8 tiny-lh">
                 <?php echo esc_html(get_field('titulo_contactanos')); ?>

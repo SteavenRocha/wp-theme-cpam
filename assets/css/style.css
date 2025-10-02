@@ -38,6 +38,7 @@ html {
   box-sizing: border-box;
   font-size: 62.5%;
   /* 10px = 1rem */
+  scroll-behavior: smooth;
 }
 
 *,
@@ -124,13 +125,23 @@ button {
 }
 
 .btn.estilo_1 {
+  transition: filter .3s ease;
   background-color: var(--primario-azul);
   color: white;
 }
 
 .btn.estilo_2 {
+  transition: filter .3s ease;
   background-color: var(--secundario-azul-cielo);
   color: white;
+}
+
+.btn.estilo_1:hover {
+  filter: brightness(120%);
+}
+
+.btn.estilo_2:hover {
+  filter: brightness(90%);
 }
 
 .contenedor {
@@ -233,6 +244,10 @@ button {
 
 .g-0 {
   gap: 0 !important;
+}
+
+.w-7 {
+  width: 70%;
 }
 
 .tiny-lh {
@@ -340,6 +355,11 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
+  transition: color .3s ease;
+}
+
+.footer .info:hover {
+  color: var(--primario-turqueza);
 }
 
 .footer .redes-sociales {
@@ -397,8 +417,6 @@ button {
 
 .swiper .swiper-button-next,
 .swiper .swiper-button-prev {
-  opacity: var(--swiper-pagination-bullet-inactive-opacity, .2);
-  color: var(--swiper-pagination-bullet-inactive-color, #000);
   transition: scale .3s ease;
 }
 
@@ -625,6 +643,54 @@ input[type="checkbox"]:focus {
   font-size: 3rem;
   font-weight: 400;
   text-align: center;
+}
+
+/* Noticias */
+.noticias-swiper {
+  margin-top: 8rem;
+  border-radius: 0;
+}
+
+.noticias-swiper .noticias-slide {
+  position: relative;
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+.noticias-slide:hover .imagen-slider {
+  scale: 1.05;
+}
+
+.noticias-swiper .noticas-detalles {
+  position: absolute;
+  bottom: 0;
+  padding: 18px;
+}
+
+.noticias-swiper .imagen-slider {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  filter: brightness(70%);
+  transition: scale .3s ease;
+}
+
+.swiper-container .swiper-navigation-icon {
+  display: none;
+}
+
+.swiper-container .swiper-button-prev,
+.swiper-container .swiper-button-next {
+  position: relative;
+  margin-top: 0;
+}
+
+.controles {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
 }
 
 /* Hero */

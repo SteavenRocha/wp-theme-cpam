@@ -31,6 +31,13 @@ function cpam_scripts_styles()
 
 add_action('wp_enqueue_scripts', 'cpam_scripts_styles');
 
+// Ocultar "Entradas" del menú de administración
+function quitar_menu_entradas() {
+    remove_menu_page('edit.php'); 
+}
+
+add_action('admin_menu', 'quitar_menu_entradas');
+
 /* SWIPER */
 function enqueue_swiper_assets()
 {
@@ -61,10 +68,19 @@ function cargar_especialidades_ajax()
     if ($query->have_posts()) :
         while ($query->have_posts()) : $query->the_post();
 
-            $image_html = '';
+            /* LOCAL */
+            /* $image_html = '';
             $image_id = get_field('imagen');
             if ($image_id) {
                 $image_html = wp_get_attachment_image($image_id, 'full', false, ['class' => 'imagen']);
+            } */
+
+            /* SHARED */
+            $image_html = '';
+            $image_id = get_field('imagen');
+            if ($image_id) {
+                $image_url = wp_get_attachment_image_url($image_id, 'full'); // URL absoluta
+                $image_html = '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" class="imagen">';
             }
 
             $html .= '<li class="card">
@@ -112,10 +128,19 @@ function cargar_doctores_ajax()
     if ($query->have_posts()) :
         while ($query->have_posts()) : $query->the_post();
 
-            $image_html = '';
+            /* LOCAL */
+            /* $image_html = '';
             $image_id   = get_field('imagen');
             if ($image_id) {
                 $image_html = wp_get_attachment_image($image_id, 'full', false, ['class' => 'imagen']);
+            } */
+
+            /* SHARED */
+            $image_html = '';
+            $image_id = get_field('imagen');
+            if ($image_id) {
+                $image_url = wp_get_attachment_image_url($image_id, 'full'); // URL absoluta
+                $image_html = '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" class="imagen">';
             }
 
             $staff_page = get_page_by_path('staff-medico');
