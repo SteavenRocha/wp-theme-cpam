@@ -2,7 +2,6 @@
 
 function cpam_setup()
 {
-
     // Imagenes Destacadas
     add_theme_support('post-thumbnails');
 
@@ -14,7 +13,6 @@ add_action('after_setup_theme', 'cpam_setup');
 
 function cpam_menus()
 {
-
     register_nav_menus(array(
         'menu-principal' => __('Menu Principal', 'cpam')
     ));
@@ -22,21 +20,21 @@ function cpam_menus()
 
 add_action('init', 'cpam_menus');
 
+// Ocultar "Entradas" del menú de administración
+function quitar_menu_entradas()
+{
+    remove_menu_page('edit.php');
+}
+
+add_action('admin_menu', 'quitar_menu_entradas');
+
 function cpam_scripts_styles()
 {
-
     wp_enqueue_style('style', get_template_directory_uri() . '/assets/css/style.css', array(), '1.0.0');
     // wp_enqueue_style('style', get_stylesheet_uri(), array(), '1.0.0'); // estilos ubicado en la carpeta raiz
 }
 
 add_action('wp_enqueue_scripts', 'cpam_scripts_styles');
-
-// Ocultar "Entradas" del menú de administración
-function quitar_menu_entradas() {
-    remove_menu_page('edit.php'); 
-}
-
-add_action('admin_menu', 'quitar_menu_entradas');
 
 /* SWIPER */
 function enqueue_swiper_assets()
@@ -46,6 +44,14 @@ function enqueue_swiper_assets()
 }
 
 add_action('wp_enqueue_scripts', 'enqueue_swiper_assets');
+
+/* MICROMODAL */
+function enqueue_modal_assets()
+{
+    wp_enqueue_script('micromodal', get_template_directory_uri() . '/assets/js/micromodal.min.js', [], null, true);
+    wp_add_inline_script('micromodal', 'MicroModal.init();');
+}
+add_action('wp_enqueue_scripts', 'enqueue_modal_assets');
 
 // PAGINACIÓN ESPECIALIDADES
 function cargar_especialidades_ajax()
@@ -129,19 +135,23 @@ function cargar_doctores_ajax()
         while ($query->have_posts()) : $query->the_post();
 
             /* LOCAL */
-            /* $image_html = '';
+            $image_html = '';
+            $image_url = '';
+            $image_alt  = '';
             $image_id   = get_field('imagen');
             if ($image_id) {
                 $image_html = wp_get_attachment_image($image_id, 'full', false, ['class' => 'imagen']);
-            } */
+                $image_url  = wp_get_attachment_image_url($image_id, 'full');
+                $image_alt  = get_post_meta($image_id, '_wp_attachment_image_alt', true);
+            }
 
             /* SHARED */
-            $image_html = '';
+            /* $image_html = '';
             $image_id = get_field('imagen');
             if ($image_id) {
                 $image_url = wp_get_attachment_image_url($image_id, 'full'); // URL absoluta
                 $image_html = '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" class="imagen">';
-            }
+            } */
 
             $staff_page = get_page_by_path('staff-medico');
             $titulo_boton = $staff_page ? get_field('titulo_boton', $staff_page->ID) : '';
@@ -181,6 +191,9 @@ function cargar_doctores_ajax()
                 }
             }
 
+            $detalles = get_field('detalles'); 
+            $data_detalles = !empty($detalles) ? esc_attr(json_encode($detalles)) : '[]';
+
             $html .= '<li class="card doctores">
                         <div class="contenido text-white">
                             ' . $image_html . '
@@ -195,7 +208,14 @@ function cargar_doctores_ajax()
                                     ' . $docs_html . '
                                 </div>
 
-                                <span class="titulo-btn">' . $titulo_boton . '</span>
+                                <span class="titulo-btn"
+                                    data-nombre="' . esc_attr(get_the_title()) . '"
+                                    data-especialidades="' . esc_attr($especialidades_html) . '"
+                                    data-documentos="' . esc_attr($docs_html) . '"
+                                    data-imagen="' . esc_url($image_url) . '"
+                                    data-alt="' . esc_attr($image_alt) . '"
+                                    data-detalles="' . $data_detalles . '"
+                                >' . esc_html($titulo_boton) . '</span>
                             </div>
                         </div>
                     </li>';

@@ -245,6 +245,29 @@
     </section>
 </main>
 
+<?php
+$icono_cerrar = get_field('icono_cerrar_modal');
+?>
+<!-- Modal -->
+<div class="modal micromodal-slide modal-1" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <header class="modal__header">
+                <img src="<?php echo esc_url($icono_cerrar); ?>" alt="" class="modal__close icono" aria-label="Cerrar" data-micromodal-close>
+            </header>
+            <main class="modal__content" id="modal-content">
+
+                <?php
+                $modal_img = get_field('imagen_modal');
+                if ($modal_img):
+                    echo wp_get_attachment_image($modal_img, 'full', false, array('class' => 'modal-img'));
+                endif;
+                ?>
+            </main>
+        </div>
+    </div>
+</div>
+
 <?php get_footer(); ?>
 
 <script>
@@ -295,5 +318,24 @@
             input.addEventListener("focus", () => label.classList.add("active"));
             input.addEventListener("blur", toggleLabel);
         });
+    });
+
+    /* MODAL */
+    document.addEventListener("DOMContentLoaded", function() {
+        const estadoModal = "<?php echo esc_js(get_field('estado')); ?>";
+
+        if (estadoModal === "activado") {
+            const modalMostrado = sessionStorage.getItem("modalMostrado");
+
+            if (!modalMostrado) {
+                MicroModal.show('modal-1', {
+                    disableScroll: true,
+                    awaitOpenAnimation: true,
+                    awaitCloseAnimation: false
+                });
+
+                sessionStorage.setItem("modalMostrado", "true");
+            }
+        }
     });
 </script>

@@ -84,6 +84,7 @@ if ($query->have_posts()) {
         <?php
         $icono_izquierda = get_field('icono_izquierda', 'informacion-general');
         $icono_derecha = get_field('icono_derecha', 'informacion-general');
+        $icono_cerrar = get_field('icono_cerrar_modal');
         ?>
         <div id="paginacion" class="paginacion">
             <button id="prev-page" title="Atrás">
@@ -107,6 +108,30 @@ if ($query->have_posts()) {
     <!-- Fin Listado de Doctores -->
 
 </main>
+
+<!-- Modal -->
+<div class="modal micromodal-slide" id="modal-doctor" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-doctor-title">
+            <header class="modal__header">
+                <img src="<?php echo esc_url($icono_cerrar); ?>" alt="" class="modal__close icono" aria-label="Cerrar" data-micromodal-close>
+            </header>
+            <main class="modal__content text-primary" id="modal-doctor-content">
+                <img id="modal-doctor-img" alt="" class="modal-imagen-doctor">
+
+                <div class="modal__content__cuerpo">
+                    <div class="modal__content__encabezado">
+                        <h3 id="modal-doctor-title" class="mg-b-0"></h3>
+                        <div id="modal-doctor-documentos"></div>
+                        <div id="modal-doctor-especialidades" class="pill-contenedor"></div>
+                    </div>
+
+                    <div id="modal-doctor-detalles" class="detalles"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -191,6 +216,45 @@ if ($query->have_posts()) {
         });
 
         cargarDoctores();
+    });
+
+    /* MODAL */
+    document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("titulo-btn")) {
+            const btn = e.target;
+
+            const nombre = btn.dataset.nombre;
+            const especialidades = btn.dataset.especialidades;
+            const documentos = btn.dataset.documentos;
+            const imagen = btn.dataset.imagen;
+            const alt = btn.dataset.alt;
+            const detalles = JSON.parse(btn.dataset.detalles || "[]");
+
+            document.getElementById("modal-doctor-title").textContent = nombre;
+            document.getElementById("modal-doctor-img").src = imagen;
+            document.getElementById("modal-doctor-img").alt = alt;
+            document.getElementById("modal-doctor-especialidades").innerHTML = especialidades;
+            document.getElementById("modal-doctor-documentos").innerHTML = documentos;
+
+            const detallesContainer = document.getElementById("modal-doctor-detalles");
+            if (detalles.length) {
+                detallesContainer.innerHTML = detalles
+                    .map(d => `
+                                <div class="detalle">
+                                    <h4 class="mg-b-05">${d.titulo}</h4>
+                                    <p>${d.descripcion}</p>
+                                </div>
+                            `).join("");
+            } else {
+                detallesContainer.innerHTML = "<p>No hay detalles disponibles</p>";
+            }
+
+            MicroModal.show("modal-doctor", {
+                disableScroll: true,
+                awaitOpenAnimation: true,
+                awaitCloseAnimation: false
+            });
+        }
     });
 </script>
 

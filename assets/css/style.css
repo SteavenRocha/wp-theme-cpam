@@ -230,6 +230,10 @@ button {
   margin-bottom: 0rem;
 }
 
+.mg-b-05 {
+  margin-bottom: 0.5rem;
+}
+
 .mg-b-2 {
   margin-bottom: 2rem;
 }
@@ -883,7 +887,7 @@ button:disabled {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: rgba(43, 49, 63, 0.671);
+  background-color: rgba(0, 0, 0, 0.6);
   opacity: 0;
   transition: opacity .3s ease;
 }
@@ -927,7 +931,7 @@ button:disabled {
 
 .card.doctores .pill-contenedor {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   margin-bottom: 0.5rem;
 }
 
@@ -957,4 +961,122 @@ button:disabled {
   margin-top: 4rem;
   align-self: flex-end;
   cursor: pointer;
+}
+
+.modal {
+  pointer-events: none;
+  position: relative;
+  z-index: 10;
+}
+
+.modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.modal.is-open .modal__overlay {
+  opacity: 1;
+  pointer-events: auto;
+  padding: 20px;
+}
+
+.modal__container {
+  transform: translateY(-30px);
+  opacity: 0;
+  transition: all 0.6s ease-out;
+  background-color: var(--primario-crema);
+  padding: 30px;
+  border-radius: 30px;
+}
+
+.modal.is-open .modal__container {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal__content .modal-imagen-doctor {
+  width: 100%;
+  max-width: 280px;
+  max-height: 400px;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  border-radius: 30px;
+}
+
+.modal__content {
+  display: flex;
+  max-width: 800px;
+  gap: 30px;
+}
+
+.modal__close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 2rem;
+  cursor: pointer;
+}
+
+.modal__content .pill-contenedor {
+  display: flex;
+  gap: 5px;
+}
+
+.modal__content .pill {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 1.4rem;
+  color: var(--primario-azul);
+}
+
+.modal__content .documentos {
+  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+}
+
+.modal__content .documentos strong {
+  font-weight: 600;
+}
+
+.modal__content__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.modal__content .detalles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal__content .detalles h4 {
+  font-weight: 600;
+}
+
+/* MODAL - INICIO */
+.modal-1 .modal-img {
+  width: 450px;
+  height: 600px;
+  object-fit: cover;
+  display: block;
+  border-radius: 30px;
+}
+
+.modal-1 .modal__container {
+  background-color: unset;
+  padding: 0;
 }
