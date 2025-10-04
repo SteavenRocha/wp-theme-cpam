@@ -75,19 +75,19 @@ function cargar_especialidades_ajax()
         while ($query->have_posts()) : $query->the_post();
 
             /* LOCAL */
-            /* $image_html = '';
+            $image_html = '';
             $image_id = get_field('imagen');
             if ($image_id) {
                 $image_html = wp_get_attachment_image($image_id, 'full', false, ['class' => 'imagen']);
-            } */
+            }
 
             /* SHARED */
-            $image_html = '';
+            /* $image_html = '';
             $image_id = get_field('imagen');
             if ($image_id) {
                 $image_url = wp_get_attachment_image_url($image_id, 'full'); // URL absoluta
                 $image_html = '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" class="imagen">';
-            }
+            } */
 
             $html .= '<li class="card">
                         <div class="contenido text-white">

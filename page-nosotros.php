@@ -109,15 +109,21 @@ $query = new WP_Query($args);
                                 <a class="swiper-slide noticias-slide" href="<?php the_permalink(); ?>">
 
                                     <?php
-                                    $noticia_img = get_field('imagen_destacada');
-                                    if ($noticia_img):
-                                        echo wp_get_attachment_image($noticia_img, 'full', false, array('class' => 'imagen-slider'));
-                                    endif;
+                                    if (has_post_thumbnail()) {
+                                        echo get_the_post_thumbnail(get_the_ID(), 'full', array('class' => 'imagen-slider'));
+                                    } else {
+                                        $fallback = get_template_directory_uri() . '/assets/img/img-fallback.jpg';
+                                        echo '<img src="' . esc_url($fallback) . '" alt="Imagen por defecto" class="imagen-slider">';
+                                    }
                                     ?>
 
                                     <div class="text-white">
-                                        <div class="noticas-detalles">
-                                            <h3 class="tiny-lh"><?php the_title(); ?></h3>
+                                        <div class="noticias-detalles">
+                                            <h3 class="tiny-lh mg-b-05"><?php the_title(); ?></h3>
+                                            <div class="meta-noticia">
+                                                <span class="autor">por: <strong><?php the_author(); ?></strong></span> -
+                                                <span class="fecha"><?php echo get_the_date('d M Y'); ?></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </a>
@@ -162,7 +168,7 @@ $query = new WP_Query($args);
 <script>
     const swiper = new Swiper('.swiper', {
         loop: true,
-        slidesPerView: 4,
+        slidesPerView: 3,
         spaceBetween: 30,
         watchOverflow: false,
         navigation: {
