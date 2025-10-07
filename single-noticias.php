@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<main class="single-noticia contenedor seccion con-sidebar">
+<main class="single-noticia contenedor seccion con-sidebar pd-l-1 p-t">
 
     <section class="contenido-principal">
         <?php

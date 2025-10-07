@@ -14,7 +14,7 @@ $query = new WP_Query($args);
 
 ?>
 
-<main class="seccion pb-0 nosotros">
+<main class="seccion pb-0 nosotros p-t">
 
     <section class="contenedor">
         <?php
@@ -44,8 +44,8 @@ $query = new WP_Query($args);
         ?>
     </section>
 
-    <section class="contenedor cantainer mision seccion-pg-t">
-        <div class="contenido text-primary">
+    <section class="contenedor cantainer seccion-pg-t">
+        <div class="contenido text-primary mision">
             <?php if (get_field('titulo_mision')) { ?>
                 <h2 class="mg-b-4 tiny-lh"><?php the_field('titulo_mision'); ?></h2>
             <?php } ?>
@@ -55,16 +55,7 @@ $query = new WP_Query($args);
             <?php } ?>
         </div>
 
-        <?php
-        $historia_img = get_field('imagen_mision');
-        if ($historia_img):
-            echo wp_get_attachment_image($historia_img, 'full', false, array('class' => 'side-img'));
-        endif;
-        ?>
-    </section>
-
-    <section class="contenedor cantainer vision seccion-pg-t">
-        <div class="contenido text-primary">
+        <div class="contenido text-primary vision">
             <?php if (get_field('titulo_vision')) { ?>
                 <h2 class="mg-b-4 tiny-lh"><?php the_field('titulo_vision'); ?></h2>
             <?php } ?>
@@ -74,12 +65,6 @@ $query = new WP_Query($args);
             <?php } ?>
         </div>
 
-        <?php
-        $historia_img = get_field('imagen_vision');
-        if ($historia_img):
-            echo wp_get_attachment_image($historia_img, 'full', false, array('class' => 'side-img'));
-        endif;
-        ?>
     </section>
 
     <section class="contenedor seccion-pg">
@@ -174,6 +159,20 @@ $query = new WP_Query($args);
         navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+            0: {
+                slidesPerView: 1,
+                spaceBetween: 20,
+            },
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 25,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
         },
     });
 </script>

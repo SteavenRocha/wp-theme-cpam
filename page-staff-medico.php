@@ -22,7 +22,7 @@ if ($query->have_posts()) {
 }
 ?>
 
-<main class="seccion contenedor">
+<main class="seccion contenedor pd-l-1 p-t">
 
     <section class="hero bg-turqueza">
         <div class="left text-primary">

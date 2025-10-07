@@ -89,12 +89,26 @@ function cargar_especialidades_ajax()
                 $image_html = '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" class="imagen">';
             } */
 
+            /* BOTÓN */
+            $especialidades_page = get_page_by_path('especialidades');
+            $boton = $especialidades_page ? get_field('boton_especialidades', $especialidades_page->ID) : '';
+            $boton_html = '';
+
+            if ($boton && isset($boton['enlace'])) {
+                $boton_html = '<a href="' . esc_url($boton['enlace']) . '" class="btn ' . esc_attr($boton['estilo']) . '">'
+                    . esc_html($boton['texto'])
+                    . '</a>';
+            }
+
             $html .= '<li class="card">
                         <div class="contenido text-white">
                             ' . $image_html . '
                             <div class="bg-contenido">
-                                <h3>' . get_the_title() . '</h3>
-                                ' . get_field('descripcion') .  '
+                                <div>
+                                    <h3>' . get_the_title() . '</h3>
+                                    ' . get_field('descripcion') .  '
+                                </div>
+                                ' . $boton_html . '
                             </div>
                         </div>
                     </li>';
@@ -191,7 +205,7 @@ function cargar_doctores_ajax()
                 }
             }
 
-            $detalles = get_field('detalles'); 
+            $detalles = get_field('detalles');
             $data_detalles = !empty($detalles) ? esc_attr(json_encode($detalles)) : '[]';
 
             $html .= '<li class="card doctores">

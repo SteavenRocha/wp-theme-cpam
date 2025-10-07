@@ -22,7 +22,7 @@ if ($query->have_posts()) {
 }
 ?>
 
-<main class="contenedor seccion">
+<main class="contenedor seccion pd-l-1 p-t">
     <section class="hero bg-crema">
         <div class="left text-primary">
             <div>
@@ -66,7 +66,7 @@ if ($query->have_posts()) {
     </section>
 
     <!-- Listado de Especialidades -->
-    <section>
+    <section class="especialidades">
 
         <ul id="listado-especialidades" class="listado-grid"> </ul> <!-- Renderizado de las especialidades -->
 

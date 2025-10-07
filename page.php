@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<main class="seccion pb-0">
+<main class="seccion pb-0 p-t">
 
     <section class="contenedor">
         <!-- Slider desde el Repeater -->
@@ -10,20 +10,35 @@
                     <?php while (have_rows('slider')): the_row(); ?>
                         <div class="swiper-slide contenedor-slide">
                             <?php
-                            $img = get_sub_field('banner');
+                            $banner = get_sub_field('banner');
                             $titulo = get_sub_field('titulo');
                             $desc = get_sub_field('descripcion');
                             $boton = get_sub_field('boton');
                             ?>
 
-                            <?php if ($img): ?>
-                                <?php echo wp_get_attachment_image($img, 'full', false, array('class' => 'imagen-hero')); ?>
+                            <?php if ($banner):
+                                $img_desktop = $banner['banner_desktop'];
+                                $img_mobile  = $banner['banner_mobile'];
+                            ?>
+                                <picture>
+                                    <?php if ($img_mobile): ?>
+                                        <source media="(max-width: 768px)"
+                                            srcset="<?php echo esc_url(wp_get_attachment_image_url($img_mobile, 'full')); ?>">
+                                    <?php endif; ?>
+
+                                    <?php if ($img_desktop): ?>
+                                        <source media="(min-width: 769px)"
+                                            srcset="<?php echo esc_url(wp_get_attachment_image_url($img_desktop, 'full')); ?>">
+                                    <?php endif; ?>
+
+                                    <?php echo wp_get_attachment_image($img_desktop, 'full', false, array('class' => 'imagen-hero')); ?>
+                                </picture>
                             <?php endif; ?>
 
                             <div class="left text-primary w-4 g-3">
                                 <div>
                                     <?php if ($titulo): ?>
-                                        <h1 class="tiny-lh"><?php echo esc_html($titulo); ?></h1>
+                                        <h1 class="tiny-lh"><?php echo nl2br(esc_html($titulo)); ?></h1>
                                     <?php endif; ?>
 
                                     <?php if ($desc): ?>
@@ -107,7 +122,7 @@
     </section>
 
     <section class="contenedor center seccion-mg">
-        <h2 class="text-primary text-font-headings mg-b-8 tiny-lh">
+        <h2 class="text-primary text-font-headings mg-b-8 tiny-lh text-center">
             <?php echo esc_html(get_field('titulo_cards')); ?>
         </h2>
 
@@ -234,7 +249,7 @@
                     <?php if (!empty($placeholders['boton'])):
                         $form_btn = $placeholders['boton']; ?>
                         <a href="<?php echo esc_url($form_btn['enlace']); ?>"
-                            class="btn <?php echo esc_attr($form_btn['estilo']); ?>">
+                            class="btn btn-form <?php echo esc_attr($form_btn['estilo']); ?>">
                             <?php echo esc_html($form_btn['texto']); ?>
                         </a>
                     <?php endif; ?>

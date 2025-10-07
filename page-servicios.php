@@ -10,7 +10,7 @@ $args = array(
 $query = new WP_Query($args);
 ?>
 
-<main class="contenedor seccion">
+<main class="contenedor seccion pd-l-1 p-t">
     <section class="hero bg-azul-cielo">
         <div class="left text-white g-0">
             <?php if (get_field('titulo')) { ?>
