@@ -57,18 +57,23 @@ add_action('wp_enqueue_scripts', 'enqueue_modal_assets');
 function cargar_especialidades_ajax()
 {
     $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+    $especialidad_id = isset($_POST['especialidad_id']) ? intval($_POST['especialidad_id']) : 0;
 
     $args = array(
-        'post_type' => 'especialidades',
+        'post_type'      => 'especialidades',
         'post_status'    => 'publish',
-        'orderby' => 'title',
-        'order' => 'ASC',
+        'orderby'        => 'title',
+        'order'          => 'ASC',
         'posts_per_page' => 8,
-        'paged' => $paged
+        'paged'          => $paged
     );
 
-    $query = new WP_Query($args);
+    // Si se seleccionó una especialidad específica
+    if ($especialidad_id) {
+        $args['p'] = $especialidad_id;
+    }
 
+    $query = new WP_Query($args);
     $html = '';
 
     if ($query->have_posts()) :
@@ -89,15 +94,19 @@ function cargar_especialidades_ajax()
                 $image_html = '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" class="imagen">';
             } */
 
-            /* BOTÓN */
+            $staff_page = get_page_by_path('staff-medico');
+            $staff_url = $staff_page ? get_permalink($staff_page->ID) : '#';
+
             $especialidades_page = get_page_by_path('especialidades');
             $boton = $especialidades_page ? get_field('boton_especialidades', $especialidades_page->ID) : '';
             $boton_html = '';
 
-            if ($boton && isset($boton['enlace'])) {
-                $boton_html = '<a href="' . esc_url($boton['enlace']) . '" class="btn ' . esc_attr($boton['estilo']) . '">'
-                    . esc_html($boton['texto'])
-                    . '</a>';
+            if ($boton) {
+                $boton_html = '<a href="' . esc_url($staff_url . '?especialidad=' . get_the_ID()) . '" 
+                           class="btn ' . esc_attr($boton['estilo']) . '" 
+                           data-especialidad-id="' . get_the_ID() . '">
+                            ' . esc_html($boton['texto']) . '
+                        </a>';
             }
 
             $html .= '<li class="card">
@@ -106,7 +115,7 @@ function cargar_especialidades_ajax()
                             <div class="bg-contenido">
                                 <div>
                                     <h3>' . get_the_title() . '</h3>
-                                    ' . get_field('descripcion') .  '
+                                    ' . get_field('descripcion') . '
                                 </div>
                                 ' . $boton_html . '
                             </div>
@@ -131,24 +140,51 @@ add_action('wp_ajax_cargar_especialidades', 'cargar_especialidades_ajax');
 function cargar_doctores_ajax()
 {
     $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+    $nombre = isset($_POST['nombre']) ? sanitize_text_field($_POST['nombre']) : '';
+    $especialidad = isset($_POST['especialidad']) ? sanitize_text_field($_POST['especialidad']) : '';
+
+    $meta_query = array();
+    $tax_query = array();
+
+    // Filtro por nombre (búsqueda en título)
+    $search = '';
+    if (!empty($nombre)) {
+        $search = $nombre;
+    }
+
+    // Filtro por especialidad (relación con CPT)
+    if (!empty($especialidad)) {
+        $tax_query[] = array(
+            'relation' => 'OR',
+            array(
+                'key' => 'especialidad', // campo ACF (relación)
+                'value' => '"' . $especialidad . '"',
+                'compare' => 'LIKE'
+            ),
+        );
+    }
 
     $args = array(
         'post_type'      => 'staff_medico',
         'post_status'    => 'publish',
         'orderby'        => 'title',
         'order'          => 'ASC',
+        's'              => $search,
         'posts_per_page' => 8,
-        'paged'          => $paged
+        'paged'          => $paged,
+        'meta_query'     => $meta_query,
     );
 
-    $query = new WP_Query($args);
+    if (!empty($tax_query)) {
+        $args['meta_query'] = $tax_query;
+    }
 
+    $query = new WP_Query($args);
     $html = '';
 
     if ($query->have_posts()) :
         while ($query->have_posts()) : $query->the_post();
 
-            /* LOCAL */
             $image_html = '';
             $image_url = '';
             $image_alt  = '';
@@ -159,47 +195,31 @@ function cargar_doctores_ajax()
                 $image_alt  = get_post_meta($image_id, '_wp_attachment_image_alt', true);
             }
 
-            /* SHARED */
-            /* $image_html = '';
-            $image_id = get_field('imagen');
-            if ($image_id) {
-                $image_url = wp_get_attachment_image_url($image_id, 'full'); // URL absoluta
-                $image_html = '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" class="imagen">';
-            } */
-
             $staff_page = get_page_by_path('staff-medico');
             $titulo_boton = $staff_page ? get_field('titulo_boton', $staff_page->ID) : '';
 
             // Especialidades (relación con CPT)
             $especialidades_html = '';
             $especialidades = get_field('especialidad');
-
             if ($especialidades) {
-                if (is_array($especialidades)) {
-                    $spans = [];
-                    foreach ($especialidades as $esp_id) {
-                        $spans[] = '<span class="pill">' . esc_html(get_the_title($esp_id)) . '</span>';
-                    }
-                    $especialidades_html = implode(' ', $spans);
-                } else {
-                    $especialidades_html = '<span class="pill">' . esc_html(get_the_title($especialidades)) . '</span>';
+                $spans = [];
+                foreach ((array)$especialidades as $esp_id) {
+                    $spans[] = '<span class="pill">' . esc_html(get_the_title($esp_id)) . '</span>';
                 }
+                $especialidades_html = implode(' ', $spans);
             }
 
-            // Documentos de los doctores
+            // Documentos
             $docs_html = '';
             if (have_rows('documentos')) {
                 $docs = [];
-
                 while (have_rows('documentos')) : the_row();
-                    $nombre = get_sub_field('nombre_documento');
+                    $nombre_doc = get_sub_field('nombre_documento');
                     $numero = get_sub_field('n_documento');
-
-                    if ($nombre && $numero) {
-                        $docs[] = '<strong>' . esc_html($nombre) . ':</strong> ' . esc_html($numero);
+                    if ($nombre_doc && $numero) {
+                        $docs[] = '<strong>' . esc_html($nombre_doc) . ':</strong> ' . esc_html($numero);
                     }
                 endwhile;
-
                 if (!empty($docs)) {
                     $docs_html .= '<p class="documentos">' . implode(' / ', $docs) . '</p>';
                 }
@@ -212,16 +232,11 @@ function cargar_doctores_ajax()
                         <div class="contenido text-white">
                             ' . $image_html . '
                             <div class="bg-contenido">
-
-                                <div class="pill-contenedor">
-                                    ' . $especialidades_html . '
-                                </div>
-
+                                <div class="pill-contenedor">' . $especialidades_html . '</div>
                                 <div class="cuerpo">
                                     <h4>' . get_the_title() . '</h4>
                                     ' . $docs_html . '
                                 </div>
-
                                 <span class="titulo-btn"
                                     data-nombre="' . esc_attr(get_the_title()) . '"
                                     data-especialidades="' . esc_attr($especialidades_html) . '"

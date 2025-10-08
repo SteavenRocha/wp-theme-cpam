@@ -5,6 +5,7 @@ $args = array(
     'post_type' => 'especialidades',
     'orderby' => 'title',
     'order' => 'ASC',
+    'posts_per_page' => -1
 );
 
 $query = new WP_Query($args);
@@ -56,7 +57,7 @@ if ($query->have_posts()) {
                         </option>
 
                         <?php foreach ($titulos as $item) : ?>
-                            <option value="<?php echo esc_attr($item['title']); ?>">
+                            <option value="<?php echo esc_attr($item['id']); ?>">
                                 <?php echo esc_html($item['title']); ?>
                             </option>
                         <?php endforeach; ?>
@@ -135,28 +136,34 @@ if ($query->have_posts()) {
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Hero Select
+        // --- Leer parámetro de especialidad desde la URL ---
+        const params = new URLSearchParams(window.location.search);
+        const especialidadParam = params.get("especialidad");
+
+        if (especialidadParam) {
+            const searchSelect = document.getElementById("search-select");
+            if (searchSelect) {
+                searchSelect.value = especialidadParam;
+            }
+        }
+
+        // --- Hero Labels ---
         const inputs = document.querySelectorAll("#search-select, #search-input");
 
         inputs.forEach(input => {
             const label = input.closest(".form-group").querySelector(".floating-label");
 
             function toggleLabel() {
-                if (input.value.trim() !== "") {
-                    label.classList.add("active");
-                } else {
-                    label.classList.remove("active");
-                }
+                if (input.value.trim() !== "") label.classList.add("active");
+                else label.classList.remove("active");
             }
-
             toggleLabel();
-
             input.addEventListener("input", toggleLabel);
             input.addEventListener("focus", () => label.classList.add("active"));
             input.addEventListener("blur", toggleLabel);
         });
 
-        // Paginacion
+        // --- Variables de paginación ---
         let paged = 1;
         let maxPages = 1;
 
@@ -168,30 +175,39 @@ if ($query->have_posts()) {
         const totalPage = document.getElementById("total-page");
         const prevBtn = document.getElementById("prev-page");
         const nextBtn = document.getElementById("next-page");
+        const searchInput = document.getElementById("search-input");
+        const searchSelect = document.getElementById("search-select");
 
+        // --- Cargar Doctores AJAX ---
         function cargarDoctores() {
+            const nombre = searchInput.value.trim();
+            const especialidad = searchSelect.value;
             const data = new FormData();
-            data.append('action', 'cargar_doctores');
-            data.append('paged', paged);
 
-            fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
-                    method: 'POST',
-                    body: data
+            data.append("action", "cargar_doctores");
+            data.append("paged", paged);
+            data.append("nombre", nombre);
+            data.append("especialidad", especialidad);
+
+            fetch("<?php echo admin_url('admin-ajax.php'); ?>", {
+                    method: "POST",
+                    body: data,
                 })
-                .then(response => response.json())
-                .then(data => {
+                .then((res) => res.json())
+                .then((data) => {
                     const html = data.html;
                     maxPages = data.maxPages;
 
-                    if (!html || html.trim() === '') {
+                    if (!html || html.trim() === "") {
                         listado.style.display = "none";
                         vacio.innerHTML = mensaje;
                         vacio.style.display = "flex";
+                        paginacion.style.display = "none";
                     } else {
                         listado.innerHTML = html;
                         listado.style.display = "grid";
-                        paginacion.style.display = "flex";
                         vacio.style.display = "none";
+                        paginacion.style.display = maxPages > 1 ? "flex" : "none";
                     }
 
                     currentPage.textContent = paged;
@@ -201,6 +217,7 @@ if ($query->have_posts()) {
                 });
         }
 
+        // --- Eventos ---
         prevBtn.addEventListener("click", () => {
             if (paged > 1) {
                 paged--;
@@ -215,10 +232,22 @@ if ($query->have_posts()) {
             }
         });
 
+        // --- Filtros ---
+        searchInput.addEventListener("input", () => {
+            paged = 1;
+            cargarDoctores();
+        });
+
+        searchSelect.addEventListener("change", () => {
+            paged = 1;
+            cargarDoctores();
+        });
+
+        // --- Carga inicial ---
         cargarDoctores();
     });
 
-    /* MODAL */
+    // --- MODAL DOCTOR ---
     document.addEventListener("click", function(e) {
         if (e.target.classList.contains("titulo-btn")) {
             const btn = e.target;
@@ -239,12 +268,15 @@ if ($query->have_posts()) {
             const detallesContainer = document.getElementById("modal-doctor-detalles");
             if (detalles.length) {
                 detallesContainer.innerHTML = detalles
-                    .map(d => `
-                                <div class="detalle">
-                                    <h4 class="mg-b-05">${d.titulo}</h4>
-                                    <p>${d.descripcion}</p>
-                                </div>
-                            `).join("");
+                    .map(
+                        (d) => `
+                <div class="detalle">
+                    <h4 class="mg-b-05">${d.titulo}</h4>
+                    <p>${d.descripcion}</p>
+                </div>
+            `
+                    )
+                    .join("");
             } else {
                 detallesContainer.innerHTML = "<p>No hay detalles disponibles</p>";
             }
@@ -252,7 +284,7 @@ if ($query->have_posts()) {
             MicroModal.show("modal-doctor", {
                 disableScroll: true,
                 awaitOpenAnimation: true,
-                awaitCloseAnimation: false
+                awaitCloseAnimation: false,
             });
         }
     });

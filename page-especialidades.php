@@ -5,6 +5,7 @@ $args = array(
     'post_type' => 'especialidades',
     'orderby' => 'title',
     'order' => 'ASC',
+    'posts_per_page' => -1
 );
 
 $query = new WP_Query($args);
@@ -44,11 +45,9 @@ if ($query->have_posts()) {
                 <label class="floating-label" for="search"><?php echo esc_html($buscador['texto_interno']); ?></label>
 
                 <select id="search">
-                    <option value="" disabled selected hidden>
-                    </option>
-
+                    <option value="" disabled selected hidden></option>
                     <?php foreach ($titulos as $item) : ?>
-                        <option value="<?php echo esc_attr($item['title']); ?>">
+                        <option value="<?php echo esc_attr($item['id']); ?>">
                             <?php echo esc_html($item['title']); ?>
                         </option>
                     <?php endforeach; ?>
@@ -100,24 +99,25 @@ if ($query->have_posts()) {
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Hero Select
+        // --- Hero Select ---
         const select = document.getElementById("search");
         const label = document.querySelector(".floating-label");
 
         function toggleLabel() {
-            if (select.value) {
-                label.classList.add("active");
-            } else {
-                label.classList.remove("active");
-            }
+            if (select.value) label.classList.add("active");
+            else label.classList.remove("active");
         }
 
         toggleLabel();
-        select.addEventListener("change", toggleLabel);
+        select.addEventListener("change", () => {
+            toggleLabel();
+            paged = 1;
+            cargarEspecialidades();
+        });
         select.addEventListener("focus", () => label.classList.add("active"));
         select.addEventListener("blur", toggleLabel);
 
-        // Paginacion
+        // --- Paginación y AJAX ---
         let paged = 1;
         let maxPages = 1;
 
@@ -131,9 +131,12 @@ if ($query->have_posts()) {
         const nextBtn = document.getElementById("next-page");
 
         function cargarEspecialidades() {
+            const especialidadID = select.value;
+
             const data = new FormData();
             data.append('action', 'cargar_especialidades');
             data.append('paged', paged);
+            data.append('especialidad_id', especialidadID);
 
             fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
                     method: 'POST',
@@ -148,11 +151,17 @@ if ($query->have_posts()) {
                         listado.style.display = "none";
                         vacio.innerHTML = mensaje;
                         vacio.style.display = "flex";
+                        paginacion.style.display = "none";
                     } else {
                         listado.innerHTML = html;
                         listado.style.display = "grid";
-                        paginacion.style.display = "flex";
                         vacio.style.display = "none";
+
+                        if (especialidadID) {
+                            paginacion.style.display = "none";
+                        } else {
+                            paginacion.style.display = "flex";
+                        }
                     }
 
                     currentPage.textContent = paged;
