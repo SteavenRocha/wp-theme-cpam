@@ -45,7 +45,7 @@
 
             <hr>
 
-            <div class="contenido_noticias">
+            <div class="contenido_WYSIWYG">
                 <?php
                 the_content();
                 ?>
@@ -56,13 +56,19 @@
     </section>
 
     <aside class="sidebar-noticias">
-        <h3>Últimas noticias</h3>
+        <?php
+        $nosotros_page = get_page_by_path('nosotros');
+        $titulo_sidebar = $nosotros_page ? get_field('titulo_sidebar_noticias', $nosotros_page->ID) : '';
+        ?>
+
+        <h3><?php echo esc_html($titulo_sidebar) ?></h3>
+
         <ul class="lista-ultimas-noticias">
             <?php
             $args = array(
-                'post_type'      => 'noticias', // tu CPT
-                'posts_per_page' => 3,          // cantidad de noticias a mostrar
-                'post__not_in'   => array(get_the_ID()), // excluir la noticia actual
+                'post_type'      => 'noticias',
+                'posts_per_page' => 3,
+                'post__not_in'   => array(get_the_ID()),
             );
             $ultimas = new WP_Query($args);
 

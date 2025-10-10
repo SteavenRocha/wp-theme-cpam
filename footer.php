@@ -1,6 +1,6 @@
 <footer class="footer">
     <div class="bg-footer">
-        <div class="contenedor contenido-footer text-white">
+        <div class="contenedor contenido-footer text-white big-lh">
 
             <div class="column-logo">
                 <!-- Logo -->
@@ -17,7 +17,7 @@
 
             <div class="column-grid">
                 <!-- Enlaces -->
-                <div class="column column-1 big-lh">
+                <div class="column column-1">
                     <h4><?php echo esc_html($titulos['titulo_enlaces']); ?></h4>
 
                     <!-- Navegacion -->
@@ -37,6 +37,19 @@
                 <!-- Legal -->
                 <div class="column column-2">
                     <h4><?php echo esc_html($titulos['titulo_legal']); ?></h4>
+
+                    <!-- Navegacion -->
+                    <?php
+
+                    $args = array(
+                        'theme_location' => 'menu-legales',
+                        'container' => 'nav',
+                        'container_class' => 'menu-principal'
+                    );
+
+                    wp_nav_menu($args);
+
+                    ?>
                 </div>
 
                 <!-- Contactanos -->

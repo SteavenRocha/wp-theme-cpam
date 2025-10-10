@@ -14,7 +14,8 @@ add_action('after_setup_theme', 'cpam_setup');
 function cpam_menus()
 {
     register_nav_menus(array(
-        'menu-principal' => __('Menu Principal', 'cpam')
+        'menu-principal' => __('Menú Principal', 'cpam'),
+        'menu-legales' => __('Menú Legales', 'cpam')
     ));
 }
 
