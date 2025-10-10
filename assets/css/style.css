@@ -703,7 +703,7 @@ button {
 
 /* Contactanos */
 #contactanos {
-  scroll-margin-top: 100px;
+  scroll-margin-top: 85px;
 }
 
 .halft {
@@ -861,6 +861,7 @@ input[type="checkbox"]:focus {
   border-radius: 50px;
   overflow: hidden;
   height: 550px;
+  position: relative;
 }
 
 .left {
@@ -1570,6 +1571,14 @@ button:disabled {
   .card .imagen {
     width: 40%;
   }
+
+  .hero .text-primary {
+    color: var(--blanco);
+  }
+
+  .hero .buscador {
+    width: 50%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1583,6 +1592,12 @@ button:disabled {
 
   .card .imagen {
     width: 45%;
+  }
+}
+
+@media (max-width: 580px) {
+  .hero .buscador {
+    width: 100%;
   }
 }
 
@@ -1611,11 +1626,35 @@ button:disabled {
   .servicios .card .imagen {
     width: 100%;
   }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(16, 55, 153, 0.4);
+    z-index: 1;
+  }
+
+  .hero .left {
+    position: absolute;
+    z-index: 2;
+    padding: 80px;
+    width: 100%;
+  }
+
+  .hero .right {
+    width: 100%;
+    clip-path: unset;
+  }
 }
 
 @media (max-width: 768px) {
   .servicios .listado-grid {
     grid-template-columns: repeat(1, 1fr);
+  }
+
+  .hero .left {
+    padding: 20px;
   }
 }
 
