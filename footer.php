@@ -132,6 +132,17 @@
     </div>
 </footer>
 
+<!-- Botón flotante WhatsApp -->
+<?php
+$icono_whatsapp = get_field('icono_whatsapp', 'informacion-general');
+$url_whatsapp = get_field('url_whatsapp', 'informacion-general');
+$texto_whatsapp = get_field('texto_whatsapp', 'informacion-general');
+?>
+
+<a href="<?php echo esc_url($url_whatsapp); ?>" target="_blank" class="btn-whatsapp" data-title="<?php echo esc_html($texto_whatsapp); ?>">
+    <img src="<?php echo esc_url($icono_whatsapp['value']['url']); ?>" alt="<?php echo esc_attr($icono_whatsapp['value']['alt']); ?>">
+</a>
+
 <?php wp_footer(); ?>
 
 </body>
