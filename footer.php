@@ -195,4 +195,33 @@ $texto_whatsapp = get_field('texto_whatsapp', 'informacion-general');
             overlay.classList.remove('active');
         });
     });
+
+    /* Menu desplegable */
+    document.addEventListener('DOMContentLoaded', function() {
+        const boton = document.querySelector('.toggle-desplegable');
+        const menu = document.querySelector('.desplegable');
+
+        if (boton && menu) {
+            boton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const activo = menu.classList.toggle('activo');
+                boton.classList.toggle('activo', activo);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!boton.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('activo');
+                    boton.classList.remove('activo');
+                }
+            });
+
+            const links = menu.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.remove('activo');
+                    boton.classList.remove('activo');
+                });
+            });
+        }
+    });
 </script>

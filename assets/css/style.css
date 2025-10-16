@@ -120,13 +120,21 @@ button {
   padding: 10px 20px;
   border-radius: 10px;
   width: max-content;
+  display: flex;
+  align-items: center;
 }
 
 .big-btn {
   width: max-content;
   padding: 10px 20px;
   border-radius: 10px;
-  font-size: 2rem;
+}
+
+.tiny-btn {
+  width: max-content;
+  border-radius: 8px;
+  padding: 6px 15px;
+  font-weight: 500;
 }
 
 .btn.estilo_1 {
@@ -327,19 +335,87 @@ button {
 .barra-navegacion {
   display: flex;
   flex-direction: row;
+  gap: 10px;
   justify-content: space-between;
+  align-items: center;
+}
+
+.menu-principal-container {
+  background-color: var(--primario-azul);
+  display: flex;
+  align-items: center;
+  gap: clamp(3rem, 2vw, 4rem);
+  padding: 1rem 3rem;
+  border-radius: 10px;
+}
+
+.menu-principal {
+  flex: 1;
+  display: flex;
   align-items: center;
 }
 
 .menu-principal ul {
   display: flex;
-  gap: 50px;
+  gap: clamp(3rem, 2vw, 4rem);
 }
 
-.menu-principal {
+.extra-menu-item {
+  position: relative;
+}
+
+.desplegable {
+  position: absolute;
+  right: 0;
+  bottom: -105px;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  background-color: var(--primario-turqueza);
+  color: var(--primario-azul);
+  padding: 7.5px;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: transform 0.25s ease;
+}
+
+.desplegable.estilo_1 {
   background-color: var(--primario-azul);
-  padding: 1.5rem 3rem;
-  border-radius: 10px;
+  color: var(--blanco);
+}
+
+.desplegable.estilo_2 {
+  background-color: var(--secundario-azul-cielo);
+  color: var(--blanco);
+}
+
+.desplegable.activo {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.desplegable a {
+  padding: 4px 7.5px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.desplegable a:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.toggle-desplegable svg {
+  margin-left: 6px;
+  width: 20px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.toggle-desplegable.activo svg {
+  transform: rotate(180deg);
 }
 
 .menu-principal a {
@@ -358,40 +434,72 @@ button {
 }
 
 .menu-toggle {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-  width: 30px;
-  height: 25px;
-  background: none;
-  border: none;
+  position: relative;
+  width: 40px;
+  height: 30px;
+  background: transparent;
   cursor: pointer;
-  z-index: 10;
+  display: none;
+  pointer-events: all;
 }
 
 .menu-toggle span {
   display: block;
+  position: absolute;
+  height: 4px;
   width: 100%;
-  height: 3px;
-  background-color: var(--primario-azul, #000);
-  border-radius: 2px;
-  transition: 0.3s ease;
+  background: var(--primario-azul);
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: .25s ease-in-out;
 }
 
-.menu-toggle.active span:nth-child(1) {
-  transform: rotate(45deg) translateY(8px);
+.menu-toggle span:nth-of-type(1) {
+  top: 0px;
+  transform-origin: left center;
 }
 
-.menu-toggle.active span:nth-child(2) {
+.menu-toggle span:nth-of-type(2) {
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: left center;
+}
+
+.menu-toggle span:nth-of-type(3) {
+  top: 100%;
+  transform-origin: left center;
+  transform: translateY(-100%);
+}
+
+.menu-toggle.active span:nth-of-type(1) {
+  transform: rotate(45deg);
+  top: 0px;
+  left: 5px;
+}
+
+.menu-toggle.active span:nth-of-type(2) {
+  width: 0%;
   opacity: 0;
 }
 
-.menu-toggle.active span:nth-child(3) {
-  transform: rotate(-45deg) translateY(-8px);
+.menu-toggle.active span:nth-of-type(3) {
+  transform: rotate(-45deg);
+  top: 28px;
+  left: 5px;
 }
 
 @media (max-width: 1024px) {
+  .menu-principal-container {
+    background-color: unset;
+    padding: 0;
+  }
+
+  .menu-principal-container .btn {
+    padding: 10px 20px;
+  }
+
   .header .menu-principal {
     display: flex;
     flex-direction: column;
@@ -412,7 +520,7 @@ button {
   }
 
   .menu-toggle {
-    display: flex;
+    display: block;
   }
 
   .header .menu-principal ul {
@@ -448,6 +556,20 @@ button {
 @media (max-width: 768px) {
   .header .menu-principal {
     width: 100%;
+  }
+
+  .menu-principal-container {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-principal-container {
+    gap: 10px;
+  }
+
+  .menu-principal-container .btn {
+    padding: 10px 10px;
   }
 }
 
@@ -1537,7 +1659,7 @@ button:disabled {
 }
 
 @media (max-width: 1024px) {
-  .error-404 { 
+  .error-404 {
     height: calc(100svh - 240px);
   }
 }
